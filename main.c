@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 FILE *iptr,*outptr;
-int progaddr;
+int progaddr,progaddrcopy;
 char record[100];
 char starting_address[100];
 int recordpointer;
@@ -23,6 +23,7 @@ int main()
     //progaddr = strtol(temp,NULL,16);
     scanf("%x",&progaddr);
     printf("the progaddr is:%x",progaddr);
+    progaddrcopy = progaddr;
     fgets(record,sizeof(record)/sizeof(char),iptr);
     int i=0;
     while(record[0]!='E')
@@ -54,13 +55,14 @@ int main()
 
 void writetooutputfile()
 {
-    char objectcode[10];
+    char extendedobjectcode[10];
+    char objectcode[7];
     while(record[recordpointer]!='\0'){
-    fprintf(outptr,"%x\t",progaddr+strtol(starting_address,NULL,16));
+    fprintf(outptr,"%lx\t",progaddr+strtol(starting_address,NULL,16));
     if(requires_modification()==1)
     {
-        strncpy(objectcode,record+(recordpointer),8);
-        fprintf(outptr,"%s\n",objectcode);
+        strncpy(extendedobjectcode,record+(recordpointer),8);
+        fprintf(outptr,"%lx\n",strtol(extendedobjectcode,NULL,16)+progaddrcopy);
         recordpointer +=9;
         progaddr+=4;
     }
