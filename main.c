@@ -21,7 +21,8 @@ int main()
     printf("Enter the starting address");
     //scanf("%s",temp);
     //progaddr = strtol(temp,NULL,16);
-    scanf("%d",&progaddr);
+    scanf("%x",&progaddr);
+    printf("the progaddr is:%x",progaddr);
     fgets(record,sizeof(record)/sizeof(char),iptr);
     int i=0;
     while(record[0]!='E')
@@ -29,7 +30,7 @@ int main()
         if(record[0]=='M')
         {
             strncpy(temp,record+(2),6);
-            modification_locations[i] = atoi(temp)+progaddr;
+            modification_locations[i] = strtol(temp,NULL,16)+progaddr;
             i++;
         }
         fgets(record,sizeof(record)/sizeof(char),iptr);
@@ -55,7 +56,7 @@ void writetooutputfile()
 {
     char objectcode[10];
     while(record[recordpointer]!='\0'){
-    fprintf(outptr,"%d\t",progaddr+atoi(starting_address));
+    fprintf(outptr,"%x\t",progaddr+strtol(starting_address,NULL,16));
     if(requires_modification()==1)
     {
         strncpy(objectcode,record+(recordpointer),8);
@@ -81,7 +82,7 @@ int requires_modification()
     int i=0;
     while(i<sizeof(modification_locations)/sizeof(int))
     {
-        if(progaddr+atoi(starting_address)+1==modification_locations[i])
+        if(progaddr+strtol(starting_address,NULL,16)+1==modification_locations[i])
         {
             printf("modification required");
             return 1;
